@@ -1,7 +1,5 @@
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { SEO } from '@/components/SEO';
-import { NEW_LANDING_SEO } from '@/lib/seo-keywords';
 import { COA_ARCHIVE_PATH, SHOP_PATH } from '@/lib/routes';
 import './marketing-landing.css';
 
@@ -14,12 +12,6 @@ const STATS = [
 export default function MarketingLanding() {
   return (
     <div className="ml-page">
-      <SEO
-        title={NEW_LANDING_SEO.title}
-        description={NEW_LANDING_SEO.description}
-        keywords={NEW_LANDING_SEO.keywords}
-      />
-
       <div className="ml-announce">
         <div className="ml-announce-pill">
           <span className="ml-announce-dot" aria-hidden />
