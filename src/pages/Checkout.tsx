@@ -162,8 +162,6 @@ export default function Checkout() {
   const [localityOk, setLocalityOk] = useState(false);
   const [isVerifyingAddress, setIsVerifyingAddress] = useState(false);
   const [selectedShipping, setSelectedShipping] = useState<string>('express');
-  const [agreedToTerms, setAgreedToTerms] = useState(true);
-  const [ageVerified, setAgeVerified] = useState(false);
 
   // Redemption: selected tier held locally — points deducted ONLY on order submit.
   // The tier's full point cost is spent on submit; if the tier's $-value is
@@ -581,7 +579,7 @@ export default function Checkout() {
         discount_amount: pointsDiscount + affiliateDiscountAmount,
         points_redeemed: redeemPointsAmount,
         total: finalOrderTotal,
-        age_verified: ageVerified,
+        age_verified: true,
         status: 'pending_payment',
         payment_status: 'pending',
         order_source: 'direct',
@@ -1836,38 +1834,17 @@ export default function Checkout() {
                 </div>
               </section>
 
-              <section className="space-y-3">
-                <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-amber-50 border border-amber-200">
-                  <input
-                    type="checkbox"
-                    id="age"
-                    checked={ageVerified}
-                    onChange={(e) => setAgeVerified(e.target.checked)}
-                    required
-                    className="w-4 h-4 mt-0.5 accent-amber-500"
-                  />
-                  <label htmlFor="age" className="text-[12px] text-slate-600 leading-snug">
-                    <span className="text-amber-700 font-semibold">I confirm I am 18 years or older</span> and purchasing these products for lawful research purposes only.
-                  </label>
-                </div>
-                <div className="flex items-start gap-2.5 px-1">
-                  <input
-                    type="checkbox"
-                    id="terms"
-                    checked={agreedToTerms}
-                    onChange={(e) => setAgreedToTerms(e.target.checked)}
-                    required
-                    className="w-4 h-4 mt-0.5 accent-[#2ED1B4]"
-                  />
-                  <label htmlFor="terms" className="text-[12px] text-slate-600">
-                    I agree to the <a href="/terms" className="text-[#1FA896] underline">Terms</a> & <a href="/privacy" className="text-[#1FA896] underline">Privacy</a>
-                  </label>
-                </div>
-              </section>
+              <div className="rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-3">
+                <p className="text-[12px] text-slate-500 leading-snug">
+                  By completing this order, I confirm that I am 18 years of age or older and that these products are being purchased solely for lawful research purposes. By continuing you agree to the{' '}
+                  <a href="/terms" className="text-[#1FA896] underline">Terms</a> and{' '}
+                  <a href="/privacy" className="text-[#1FA896] underline">Privacy</a> policy.
+                </p>
+              </div>
 
               <button
                 type="submit"
-                disabled={!agreedToTerms || !ageVerified || isSubmitting}
+                disabled={isSubmitting}
                 className="w-full py-3.5 rounded-xl bg-[#2ED1B4] text-[#070A12] font-bold text-[15px] hover:bg-[#25b89d] disabled:opacity-50 transition-colors"
               >
                 {isSubmitting ? (
