@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { suggestAusPostLocalities, type AusPostLocalitySuggestion } from '@/lib/auspost-address';
 
-const inputClass =
+const darkInputClass =
   'w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-white text-xs focus:border-[#2ED1B4] outline-none';
 
 export default function AusPostLocalityField({
@@ -10,12 +10,18 @@ export default function AusPostLocalityField({
   onChange,
   onPick,
   onBlurVerify,
+  className,
+  placeholder,
+  tone = 'dark',
 }: {
   kind: 'suburb' | 'postcode';
   value: string;
   onChange: (value: string) => void;
   onPick: (suggestion: AusPostLocalitySuggestion) => void;
   onBlurVerify: () => void;
+  className?: string;
+  placeholder?: string;
+  tone?: 'dark' | 'light';
 }) {
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const blurTimer = useRef<number | null>(null);
@@ -99,15 +105,23 @@ export default function AusPostLocalityField({
         spellCheck={false}
         inputMode={kind === 'postcode' ? 'numeric' : 'text'}
         maxLength={kind === 'postcode' ? 4 : undefined}
-        className={inputClass}
-        placeholder={kind === 'postcode' ? 'Postcode' : 'Suburb'}
+        className={className || darkInputClass}
+        placeholder={placeholder || (kind === 'postcode' ? 'Postcode' : 'Suburb')}
         aria-autocomplete="list"
         aria-expanded={showList}
       />
       {showList && (
-        <div className="absolute left-0 right-0 z-30 mt-1 rounded-lg border border-white/15 bg-[#111827] shadow-xl overflow-hidden">
+        <div
+          className={
+            tone === 'light'
+              ? 'absolute left-0 right-0 z-30 mt-1 rounded-xl border border-slate-200 bg-white shadow-xl overflow-hidden'
+              : 'absolute left-0 right-0 z-30 mt-1 rounded-lg border border-white/15 bg-[#111827] shadow-xl overflow-hidden'
+          }
+        >
           {loading && suggestions.length === 0 && (
-            <p className="px-3 py-2 text-[11px] text-[#A9B3C7]">Searching Australia Post…</p>
+            <p className={`px-3 py-2 text-[11px] ${tone === 'light' ? 'text-slate-500' : 'text-[#A9B3C7]'}`}>
+              Searching Australia Post…
+            </p>
           )}
           {suggestions.map((row, index) => (
             <button
@@ -116,7 +130,13 @@ export default function AusPostLocalityField({
               onMouseDown={(e) => e.preventDefault()}
               onClick={() => pick(row)}
               className={`w-full text-left px-3 py-2 text-[11px] ${
-                index === active ? 'bg-[#2ED1B4]/15 text-white' : 'text-[#F4F6FA] hover:bg-white/5'
+                tone === 'light'
+                  ? index === active
+                    ? 'bg-[#2ED1B4]/15 text-slate-900'
+                    : 'text-slate-700 hover:bg-slate-50'
+                  : index === active
+                    ? 'bg-[#2ED1B4]/15 text-white'
+                    : 'text-[#F4F6FA] hover:bg-white/5'
               }`}
             >
               {row.label}
