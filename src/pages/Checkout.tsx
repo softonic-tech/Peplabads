@@ -33,6 +33,7 @@ import {
 import { redeemPromoCode } from '@/lib/promo-codes';
 import { sendOrderConfirmation } from '@/lib/email';
 import { SEO } from '@/components/SEO';
+import AusPostLocalityField from '@/components/AusPostLocalityField';
 import { generateOrderNumberForCheckout, generatePreorderOrderNumberForCheckout } from '@/lib/orderNumber';
 import { copyTextToClipboard } from '@/lib/clipboard';
 import { formatOrderNumberDisplay } from '@/utils/order-number';
@@ -1074,27 +1075,37 @@ export default function Checkout() {
                 placeholder="Apartment / unit (optional)"
               />
               <div className="grid grid-cols-2 gap-2">
-                <input 
-                  type="text" 
-                  value={shippingAddress.suburb} 
-                  onChange={(e) => updateShipping({ suburb: e.target.value })} 
-                  onBlur={() => void verifyLocality(shippingAddress, { quietIfIncomplete: true })}
-                  required
-                  autoComplete="address-level2"
-                  className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-white text-xs focus:border-[#2ED1B4] outline-none"
-                  placeholder="Suburb"
+                <AusPostLocalityField
+                  kind="suburb"
+                  value={shippingAddress.suburb}
+                  onChange={(suburb) => updateShipping({ suburb })}
+                  onPick={(loc) => {
+                    const next = {
+                      ...shippingAddress,
+                      suburb: loc.suburb,
+                      state: loc.state,
+                      postcode: loc.postcode,
+                    };
+                    updateShipping({ suburb: loc.suburb, state: loc.state, postcode: loc.postcode });
+                    void verifyLocality(next);
+                  }}
+                  onBlurVerify={() => void verifyLocality(shippingAddress, { quietIfIncomplete: true })}
                 />
-                <input 
-                  type="text" 
-                  value={shippingAddress.postcode} 
-                  onChange={(e) => updateShipping({ postcode: e.target.value })} 
-                  onBlur={() => void verifyLocality(shippingAddress, { quietIfIncomplete: true })}
-                  required
-                  autoComplete="postal-code"
-                  inputMode="numeric"
-                  maxLength={4}
-                  className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-white text-xs focus:border-[#2ED1B4] outline-none"
-                  placeholder="Postcode"
+                <AusPostLocalityField
+                  kind="postcode"
+                  value={shippingAddress.postcode}
+                  onChange={(postcode) => updateShipping({ postcode })}
+                  onPick={(loc) => {
+                    const next = {
+                      ...shippingAddress,
+                      suburb: loc.suburb,
+                      state: loc.state,
+                      postcode: loc.postcode,
+                    };
+                    updateShipping({ suburb: loc.suburb, state: loc.state, postcode: loc.postcode });
+                    void verifyLocality(next);
+                  }}
+                  onBlurVerify={() => void verifyLocality(shippingAddress, { quietIfIncomplete: true })}
                 />
               </div>
               <div className="grid grid-cols-2 gap-2">
