@@ -133,7 +133,7 @@ function parseCollectionFromAddress(address: string): {
 
 export default function Checkout() {
   const { items, paidItemsTotal, clearCart, isLoading: isCartLoading, updateQuantity } = useCart();
-  const { balance, redeemPoints } = useRewards();
+  const { balance, redeemPoints, loyaltyTier, isLoggedIn: rewardsLoggedIn } = useRewards();
   const { appliedCode, appliedPromotion, applyCode, clearCode } = useAffiliate();
   const [userId, setUserId] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -344,6 +344,7 @@ export default function Checkout() {
   const referralPromoDiscountActive = referralBenefitsActive && affiliateDiscountAmount > 0;
   const estimatedPurchaseRewardPts = calculatePurchasePoints(paidItemsTotal, {
     promoDiscountApplied: referralPromoDiscountActive,
+    cashbackPercent: rewardsLoggedIn ? loyaltyTier.cashbackPercent : 5,
   });
 
   const updateShipping = (patch: Partial<CheckoutShippingDetails>) => {
