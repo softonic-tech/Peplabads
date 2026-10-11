@@ -1,23 +1,26 @@
 const trim = (url: string) => url.replace(/\/$/, '');
 
-function runtimeOrigin(): string {
+/** Live catalogue / checkout — never this ads host. */
+const DEFAULT_SHOP_ORIGIN = 'https://peplab.com.au';
+
+function landingOrigin(): string {
   if (typeof window !== 'undefined') return window.location.origin;
-  const fromEnv = import.meta.env.VITE_MAIN_SITE_URL || import.meta.env.VITE_SITE_URL;
-  return trim(fromEnv || 'https://peplab.ai');
+  const fromEnv = import.meta.env.VITE_LANDING_SITE_URL || import.meta.env.VITE_SITE_URL;
+  return trim(fromEnv || 'https://www.peplabads.com');
 }
 
-/** Main storefront origin for this deployment. */
-export const MAIN_SITE_URL = trim(import.meta.env.VITE_MAIN_SITE_URL || runtimeOrigin());
+/** Main storefront origin (peplab.com.au). Override with VITE_MAIN_SITE_URL. */
+export const MAIN_SITE_URL = trim(import.meta.env.VITE_MAIN_SITE_URL || DEFAULT_SHOP_ORIGIN);
 
-/** Alias: shop lives at the main site root. */
+/** Alias: shop lives on peplab.com.au. */
 export const SHOP_URL = MAIN_SITE_URL;
 
 /**
- * Marketing landing — /landing on the main site when embedded.
- * Override with VITE_LANDING_SITE_URL for standalone subdomain deploys.
+ * This ads host only serves /landing. Logo / self-links stay here.
+ * Override with VITE_LANDING_SITE_URL if needed.
  */
 export const LANDING_SITE_URL = trim(
-  import.meta.env.VITE_LANDING_SITE_URL || `${runtimeOrigin()}/landing`,
+  import.meta.env.VITE_LANDING_SITE_URL || `${landingOrigin()}/landing`,
 );
 
 /** Published COA archive on the main shop site. */
