@@ -7,6 +7,7 @@ export const GOOGLE_ADS_SEND_TO = 'AW-18402839116/I_wlCN6pxOUcEMyUlMdE';
 export const GOOGLE_ADS_PURCHASE_SEND_TO = [
   GOOGLE_ADS_SEND_TO,
   'AW-18406019358/Oe5BCLW3leccEJ6i1shE',
+  'AW-18419216980/YU-vCJme6uwcENTk-85E',
 ] as const;
 
 const TRACKED_ORDERS_KEY = 'peplab_gads_purchase_ids';
