@@ -193,6 +193,8 @@ function App() {
             <StaleTabReloader />
             <Suspense fallback={<div style={PAGE_SHELL_STYLE} />}>
               <Routes>
+                {/* Same landing at / so Google Ads can verify the tag on www.peplabads.com */}
+                <Route path="/" element={<PeplabLandingRoute />} />
                 <Route path="/landing" element={<PeplabLandingRoute />} />
               </Routes>
             </Suspense>
