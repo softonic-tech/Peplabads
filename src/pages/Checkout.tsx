@@ -62,6 +62,7 @@ import {
   type AusPostLocalitySuggestion,
 } from '@/lib/auspost-address';
 import { Skeleton } from '@/components/ui/skeleton';
+import { trackGoogleAdsPurchase } from '@/lib/google-ads';
 
 interface ShippingMethod {
   id: string;
@@ -768,6 +769,12 @@ export default function Checkout() {
       setTimeout(() => setCopyNotice(null), 5000);
     }
   };
+
+  // Email event snippet: fire Purchase on the thank-you screen only.
+  useEffect(() => {
+    if (!orderComplete || !orderNumber) return;
+    trackGoogleAdsPurchase(orderTotal, orderNumber);
+  }, [orderComplete, orderNumber, orderTotal]);
 
   // ORDER CONFIRMATION PAGE
   if (orderComplete) {
