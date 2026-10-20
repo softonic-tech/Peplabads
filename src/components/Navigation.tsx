@@ -13,9 +13,17 @@ import { HOME_PATH, SHOP_PATH, CALCULATOR_PATH, COA_ARCHIVE_PATH } from '@/lib/r
 type NavigationProps = {
   /** Render inside a parent fixed header (e.g. below announce bar on /landing). */
   embedded?: boolean;
+  /** Optional destination for the logo. */
+  logoHref?: string;
+  /** Prefix internal links when this navigation is rendered on a standalone host. */
+  linkBase?: string;
 };
 
-export default function Navigation({ embedded = false }: NavigationProps) {
+export default function Navigation({
+  embedded = false,
+  logoHref = HOME_PATH,
+  linkBase = '',
+}: NavigationProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -77,13 +85,15 @@ export default function Navigation({ embedded = false }: NavigationProps) {
     'text-sm font-medium text-[#A9B3C7] hover:text-[#F4F6FA] transition-colors duration-300';
   const navClassMobile =
     'block w-full text-left text-lg font-medium text-[#A9B3C7] hover:text-[#F4F6FA] transition-colors duration-300 py-2';
+  const hrefFor = (href: string) =>
+    linkBase && href.startsWith('/') ? `${linkBase.replace(/\/$/, '')}${href}` : href;
 
   type NavAnchor = { label: string; href: string };
   /** Crawlable anchors where possible; Google sitelinks are still automated. */
   const navEntries: ReadonlyArray<NavAnchor> = [
     { label: 'Shop', href: SHOP_PATH },
-    // Temporarily disabled — client asked to remove Protocols (compliance risk).
-    // { label: 'Protocols', href: PROTOCOLS_PATH },
+    { label: 'Research', href: '/research' },
+    { label: 'Blog', href: '/blog' },
     { label: 'COA', href: COA_ARCHIVE_PATH },
     { label: 'Calculator', href: CALCULATOR_PATH },
     { label: 'About', href: '/standards' },
@@ -102,28 +112,28 @@ export default function Navigation({ embedded = false }: NavigationProps) {
               : 'bg-[#070A12]'
         }`}
       >
-        <div className={embedded ? 'nl-container' : 'w-full px-4 sm:px-6 lg:px-12'}>
-          <div className={`nl-nav-bar flex items-center justify-between ${embedded ? '' : 'h-16 sm:h-20 lg:h-24'}`}>
-            <a href={HOME_PATH} className="flex flex-col items-start" aria-label="PEPLAB Australia home" onClick={() => setIsMobileMenuOpen(false)}>
-              <span className={`font-bold tracking-[0.12em] gradient-text leading-none ${embedded ? 'text-xl sm:text-2xl lg:text-4xl' : 'text-3xl sm:text-4xl lg:text-5xl'}`}>
+        <div className={embedded ? 'nl-container' : 'w-full px-4 sm:px-6 lg:px-10 xl:px-12'}>
+          <div className={`nl-nav-bar flex items-center justify-between gap-4 ${embedded ? '' : 'h-16 sm:h-20 lg:h-[5.5rem]'}`}>
+            <a href={logoHref} className="flex shrink-0 flex-col items-start" aria-label="PEPLAB Australia home" onClick={() => setIsMobileMenuOpen(false)}>
+              <span className={`font-bold tracking-[0.12em] gradient-text leading-none ${embedded ? 'text-xl sm:text-2xl lg:text-3xl' : 'text-2xl sm:text-3xl lg:text-4xl'}`}>
                 PEPLAB
               </span>
-              <span className={`nl-nav-tagline font-mono uppercase text-[#8B5CF6] mt-0.5 ${embedded ? 'text-[9px] sm:text-[10px] tracking-[0.35em]' : 'text-[10px] sm:text-xs lg:text-sm tracking-[0.45em] sm:tracking-[0.5em]'}`}>
+              <span className={`nl-nav-tagline font-mono uppercase text-[#8B5CF6] mt-0.5 ${embedded ? 'text-[9px] sm:text-[10px] tracking-[0.35em]' : 'text-[9px] sm:text-[10px] lg:text-xs tracking-[0.4em] sm:tracking-[0.45em]'}`}>
                 PEPTIDES AUSTRALIA
               </span>
             </a>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-10">
+            <div className="hidden lg:flex items-center gap-5 xl:gap-7">
               {navEntries.map((entry) => (
-                <a key={entry.label} href={entry.href} className={navClassDesktop}>
+                <a key={entry.label} href={hrefFor(entry.href)} className={navClassDesktop}>
                   {entry.label}
                 </a>
               ))}
             </div>
 
             {/* Right Side */}
-            <div className="flex items-center gap-2 sm:gap-4">
+            <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
               {/* Search Button */}
               {/* <button
                 onClick={() => setIsSearchOpen(true)}
@@ -133,22 +143,6 @@ export default function Navigation({ embedded = false }: NavigationProps) {
                 <Search className="w-5 h-5 text-[#F4F6FA]" />
               </button> */}
 
-              {/* Leaderboard Link - Desktop */}
-              <a
-                href="/leaderboard"
-                className="hidden lg:flex items-center gap-2 px-3 py-2 rounded-full hover:bg-[rgba(244,246,250,0.08)] transition-colors duration-300"
-                title="Promoter Leaderboard"
-              >
-                <Trophy className="w-5 h-5 text-amber-300" />
-              </a>
-              {/* Track Order Link - Desktop */}
-              <a
-                href="/track-order"
-                className="hidden lg:flex items-center gap-2 px-3 py-2 rounded-full hover:bg-[rgba(244,246,250,0.08)] transition-colors duration-300"
-                title="Track Order"
-              >
-                <Package className="w-5 h-5 text-[#F4F6FA]" />
-              </a>
               {/* Points Display - When Logged In */}
               {isLoggedIn && (
                 <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[rgba(139,92,246,0.1)] border border-[rgba(139,92,246,0.2)]">
@@ -162,7 +156,7 @@ export default function Navigation({ embedded = false }: NavigationProps) {
                 <div className="hidden sm:flex items-center gap-2">
                   {myPromoter && (
                     <a
-                      href="/promoter"
+                      href={hrefFor('/promoter')}
                       className="flex items-center gap-2 px-4 py-2 rounded-full bg-[rgba(34,197,94,0.15)] border border-[rgba(34,197,94,0.3)] text-[#22C55E] hover:bg-[rgba(34,197,94,0.25)] transition-colors duration-300"
                     >
                       <TrendingUp className="w-4 h-4" />
@@ -170,14 +164,14 @@ export default function Navigation({ embedded = false }: NavigationProps) {
                     </a>
                   )}
                   <a
-                    href="/dashboard"
+                    href={hrefFor('/dashboard')}
                     className="flex items-center gap-2 px-4 py-2 rounded-full bg-[rgba(46,209,180,0.15)] border border-[rgba(46,209,180,0.3)] text-[#2ED1B4] hover:bg-[rgba(46,209,180,0.25)] transition-colors duration-300"
                   >
                     <LayoutDashboard className="w-4 h-4" />
                     <span className="text-sm font-medium">Dashboard</span>
                   </a>
                   <a
-                    href="/settings"
+                    href={hrefFor('/settings')}
                     className="flex items-center justify-center w-10 h-10 rounded-full bg-[rgba(244,246,250,0.08)] border border-[rgba(244,246,250,0.15)] text-[#A9B3C7] hover:text-[#F4F6FA] hover:bg-[rgba(244,246,250,0.12)] transition-colors duration-300"
                     title="Account Settings"
                   >
@@ -186,8 +180,8 @@ export default function Navigation({ embedded = false }: NavigationProps) {
                 </div>
               ) : (
                 <a
-                  href="/login"
-                  className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-[rgba(139,92,246,0.15)] border border-[rgba(139,92,246,0.3)] text-[#8B5CF6] hover:bg-[rgba(139,92,246,0.25)] transition-colors duration-300"
+                  href={hrefFor('/login')}
+                  className="hidden sm:inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-[rgba(139,92,246,0.15)] border border-[rgba(139,92,246,0.3)] text-[#8B5CF6] hover:bg-[rgba(139,92,246,0.25)] transition-colors duration-300"
                 >
                   <User className="w-4 h-4" />
                   <span className="text-sm font-medium">Login</span>
@@ -197,11 +191,12 @@ export default function Navigation({ embedded = false }: NavigationProps) {
               {/* Cart Button */}
               <button
                 onClick={() => setIsCartOpen(true)}
-                className="relative p-2.5 sm:p-3 rounded-full hover:bg-[rgba(244,246,250,0.08)] transition-colors duration-300"
+                className="relative p-2.5 rounded-full hover:bg-[rgba(244,246,250,0.08)] transition-colors duration-300"
+                aria-label="Open cart"
               >
-                <ShoppingCart className="w-6 h-6 sm:w-7 sm:h-7 text-[#F4F6FA]" />
+                <ShoppingCart className="w-6 h-6 text-[#F4F6FA]" />
                 {totalItems > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#2ED1B4] text-[#070A12] text-xs sm:text-sm font-bold flex items-center justify-center">
+                  <span className="absolute -top-0.5 -right-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#2ED1B4] px-1 text-[11px] font-bold text-[#070A12]">
                     {totalItems}
                   </span>
                 )}
@@ -209,8 +204,10 @@ export default function Navigation({ embedded = false }: NavigationProps) {
 
               {/* Mobile Menu Button */}
               <button
+                type="button"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className="lg:hidden p-2 rounded-full hover:bg-[rgba(244,246,250,0.08)] transition-colors duration-300"
+                aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
               >
                 {isMobileMenuOpen ? (
                   <X className="w-6 h-6 text-[#F4F6FA]" />
@@ -230,10 +227,10 @@ export default function Navigation({ embedded = false }: NavigationProps) {
               : 'opacity-0 -translate-y-4 pointer-events-none'
           }`}
         >
-          <div className="px-6 py-6 space-y-4">
+          <div className="px-6 py-6 space-y-1">
             {/* Points Display - Mobile */}
             {isLoggedIn && (
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-[rgba(139,92,246,0.1)] border border-[rgba(139,92,246,0.2)] w-fit">
+              <div className="mb-3 flex items-center gap-2 px-3 py-2 rounded-xl bg-[rgba(139,92,246,0.1)] border border-[rgba(139,92,246,0.2)] w-fit">
                 <Award className="w-4 h-4 text-[#8B5CF6]" />
                 <span className="text-sm font-medium text-[#8B5CF6]">{balance.toLocaleString()} pts</span>
               </div>
@@ -242,18 +239,20 @@ export default function Navigation({ embedded = false }: NavigationProps) {
             {navEntries.map((entry) => (
               <a
                 key={entry.label}
-                href={entry.href}
+                href={hrefFor(entry.href)}
                 className={navClassMobile}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {entry.label}
               </a>
             ))}
+
+            <div className="my-3 h-px bg-[rgba(244,246,250,0.08)]" />
             
             {/* Mobile Track Order Link — above Leaderboard */}
             <a
-              href="/track-order"
-              className="flex items-center gap-2 text-lg font-medium text-[#A9B3C7] hover:text-[#F4F6FA] transition-colors duration-300 py-2"
+              href={hrefFor('/track-order')}
+              className="flex items-center gap-2 text-base font-medium text-[#A9B3C7] hover:text-[#F4F6FA] transition-colors py-2"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               <Package className="w-5 h-5" />
@@ -262,8 +261,8 @@ export default function Navigation({ embedded = false }: NavigationProps) {
 
             {/* Mobile Leaderboard Link */}
             <a
-              href="/leaderboard"
-              className="flex items-center gap-2 text-lg font-medium text-amber-300 hover:text-amber-200 transition-colors duration-300 py-2"
+              href={hrefFor('/leaderboard')}
+              className="flex items-center gap-2 text-base font-medium text-amber-300 hover:text-amber-200 transition-colors py-2"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               <Trophy className="w-5 h-5" />
@@ -275,7 +274,7 @@ export default function Navigation({ embedded = false }: NavigationProps) {
               <>
                 {myPromoter && (
                   <a
-                    href="/promoter"
+                    href={hrefFor('/promoter')}
                     className="flex items-center gap-2 text-lg font-medium text-[#22C55E] hover:text-[#4ADE80] transition-colors duration-300 py-2"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
@@ -284,14 +283,14 @@ export default function Navigation({ embedded = false }: NavigationProps) {
                   </a>
                 )}
                 <a
-                  href="/dashboard"
+                  href={hrefFor('/dashboard')}
                   className="flex items-center gap-2 text-lg font-medium text-[#2ED1B4] hover:text-[#5EEAD4] transition-colors duration-300 py-2"
                 >
                   <LayoutDashboard className="w-5 h-5" />
                   Dashboard
                 </a>
                 <a
-                  href="/settings"
+                  href={hrefFor('/settings')}
                   className="flex items-center gap-2 text-lg font-medium text-[#A9B3C7] hover:text-[#F4F6FA] transition-colors duration-300 py-2"
                 >
                   <Settings className="w-5 h-5" />
@@ -300,7 +299,7 @@ export default function Navigation({ embedded = false }: NavigationProps) {
               </>
             ) : (
               <a
-                href="/login"
+                href={hrefFor('/login')}
                 className="flex items-center gap-2 text-lg font-medium text-[#8B5CF6] hover:text-[#A78BFA] transition-colors duration-300 py-2"
               >
                 <User className="w-5 h-5" />

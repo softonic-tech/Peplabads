@@ -127,6 +127,12 @@ export default function Footer() {
             <h4 className="nl-footer-col-heading">Quality</h4>
             <ul className="nl-footer-links">
               <li>
+                <Link to="/research">Research</Link>
+              </li>
+              <li>
+                <Link to="/blog">Blog</Link>
+              </li>
+              <li>
                 <Link to={COA_ARCHIVE_PATH}>COA results</Link>
               </li>
               <li>
