@@ -1,7 +1,6 @@
-const trim = (url: string) => url.replace(/\/$/, '');
+import { STOREFRONT_ORIGIN } from '@/lib/storefront-origin';
 
-/** Live catalogue / checkout — never this ads host. */
-const DEFAULT_SHOP_ORIGIN = 'https://peplab.com.au';
+const trim = (url: string) => url.replace(/\/$/, '');
 
 function landingOrigin(): string {
   if (typeof window !== 'undefined') return window.location.origin;
@@ -9,10 +8,10 @@ function landingOrigin(): string {
   return trim(fromEnv || 'https://www.peplabads.com');
 }
 
-/** Main storefront origin (peplab.com.au). Override with VITE_MAIN_SITE_URL. */
-export const MAIN_SITE_URL = trim(import.meta.env.VITE_MAIN_SITE_URL || DEFAULT_SHOP_ORIGIN);
+/** Shop, nav, and footer links. Change STOREFRONT_ORIGIN to move all of them. */
+export const MAIN_SITE_URL = trim(STOREFRONT_ORIGIN);
 
-/** Alias: shop lives on peplab.com.au. */
+/** Alias of STOREFRONT_ORIGIN. */
 export const SHOP_URL = MAIN_SITE_URL;
 
 /**

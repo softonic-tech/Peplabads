@@ -36,9 +36,6 @@ export function SEO({
 
     const metaTags = [
       { name: 'description', content: description },
-      { name: 'keywords', content: keywords },
-      { name: 'geo.region', content: 'AU-NSW' },
-      { name: 'geo.placename', content: 'Sydney, New South Wales, Australia' },
       { property: 'og:title', content: title },
       { property: 'og:description', content: description },
       { property: 'og:image', content: ogImage },
@@ -56,11 +53,8 @@ export function SEO({
       { name: 'twitter:image', content: ogImage },
     ];
 
-    if (noIndex) {
-      metaTags.push({ name: 'robots', content: 'noindex, nofollow' });
-    } else {
-      metaTags.push({ name: 'robots', content: 'index, follow' });
-    }
+    metaTags.push({ name: 'robots', content: 'noindex, nofollow' });
+    metaTags.push({ name: 'googlebot', content: 'noindex, nofollow' });
 
     metaTags.forEach(({ name, property, content }) => {
       let tag: HTMLMetaElement | null = null;
@@ -82,13 +76,10 @@ export function SEO({
       tag?.setAttribute('content', content);
     });
 
-    let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
-    if (!canonical) {
-      canonical = document.createElement('link');
-      canonical.setAttribute('rel', 'canonical');
-      document.head.appendChild(canonical);
-    }
-    canonical.setAttribute('href', CONFIG.SITE_URL);
+    document.querySelector('link[rel="canonical"]')?.remove();
+    document.querySelector('meta[name="keywords"]')?.remove();
+    document.querySelector('meta[name="geo.region"]')?.remove();
+    document.querySelector('meta[name="geo.placename"]')?.remove();
   }, [title, description, keywords, ogImage, noIndex]);
 
   return null;

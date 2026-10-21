@@ -13,6 +13,7 @@ import { CONFIG } from '@/lib/config';
 import { FREE_SHIPPING_THRESHOLD } from '@/lib/auspost';
 import { getSiteSetting, DEFAULT_SUPPORT_LINKS } from '@/lib/settings';
 import { HOME_PATH, SHOP_PATH, CALCULATOR_PATH, COA_ARCHIVE_PATH } from '@/lib/routes';
+import { shopUrl } from '@/landing/lib/site';
 // PROTOCOLS_PATH temporarily unused — restore with Dosage chart footer link
 // import { HOME_PATH, SHOP_PATH, PROTOCOLS_PATH, CALCULATOR_PATH, COA_ARCHIVE_PATH } from '@/lib/routes';
 
@@ -112,13 +113,13 @@ export default function Footer() {
             <h4 className="nl-footer-col-heading">Shop</h4>
             <ul className="nl-footer-links">
               <li>
-                <a href={SHOP_PATH}>All products</a>
+                <a href={shopUrl(SHOP_PATH)}>All products</a>
               </li>
               <li>
-                <Link to={SHOP_PATH}>Best sellers</Link>
+                <a href={shopUrl(SHOP_PATH)}>Best sellers</a>
               </li>
               <li>
-                <Link to={SHOP_PATH}>New arrivals</Link>
+                <a href={shopUrl(SHOP_PATH)}>New arrivals</a>
               </li>
             </ul>
           </div>
@@ -127,27 +128,27 @@ export default function Footer() {
             <h4 className="nl-footer-col-heading">Quality</h4>
             <ul className="nl-footer-links">
               <li>
-                <Link to="/research">Research</Link>
+                <a href={shopUrl('/research')}>Research</a>
               </li>
               <li>
-                <Link to="/blog">Blog</Link>
+                <a href={shopUrl('/blog')}>Blog</a>
               </li>
               <li>
-                <Link to={COA_ARCHIVE_PATH}>COA results</Link>
+                <a href={shopUrl(COA_ARCHIVE_PATH)}>COA results</a>
               </li>
               <li>
-                <Link to="/standards">Our standards</Link>
+                <a href={shopUrl('/standards')}>Our standards</a>
               </li>
               {/* Temporarily disabled — client asked to remove protocols (compliance risk).
               <li>
-                <Link to={PROTOCOLS_PATH}>Dosage chart</Link>
+                <a href={shopUrl('/protocols')}>Dosage chart</a>
               </li>
               */}
               <li>
-                <Link to={CALCULATOR_PATH}>Calculator</Link>
+                <a href={shopUrl(CALCULATOR_PATH)}>Calculator</a>
               </li>
               <li>
-                <Link to="/faq">FAQ</Link>
+                <a href={shopUrl('/faq')}>FAQ</a>
               </li>
             </ul>
           </div>
@@ -156,10 +157,10 @@ export default function Footer() {
             <h4 className="nl-footer-col-heading">Support</h4>
             <ul className="nl-footer-links">
               <li>
-                <Link to="/track-order">Track order</Link>
+                <a href={shopUrl('/track-order')}>Track order</a>
               </li>
               <li>
-                <Link to="/contact-info">Contact us</Link>
+                <a href={shopUrl('/contact-info')}>Contact us</a>
               </li>
               {CONFIG.SUPPORT_EMAIL || CONFIG.CONTACT_EMAIL ? (
                 <li>
@@ -228,22 +229,22 @@ export default function Footer() {
             <h4 className="nl-footer-col-heading">Legal policies</h4>
             <ul className="nl-footer-links">
               <li>
-                <Link to="/shipping">Shipping Policy</Link>
+                <a href={shopUrl('/shipping')}>Shipping Policy</a>
               </li>
               <li>
-                <Link to="/refund">Return & Refund Policy</Link>
+                <a href={shopUrl('/refund')}>Return & Refund Policy</a>
               </li>
               <li>
-                <Link to="/privacy">Privacy Policy</Link>
+                <a href={shopUrl('/privacy')}>Privacy Policy</a>
               </li>
               <li>
-                <Link to="/terms">Terms of Service</Link>
+                <a href={shopUrl('/terms')}>Terms of Service</a>
               </li>
               <li>
-                <Link to="/legal">Legal & compliance</Link>
+                <a href={shopUrl('/legal')}>Legal & compliance</a>
               </li>
               <li>
-                <Link to="/rewards-terms">Rewards terms</Link>
+                <a href={shopUrl('/rewards-terms')}>Rewards terms</a>
               </li>
             </ul>
           </div>

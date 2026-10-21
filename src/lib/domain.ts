@@ -21,12 +21,10 @@
  */
 
 import { CONFIG } from './config';
+import { STOREFRONT_ORIGIN } from '@/lib/storefront-origin';
 
 /** Hosts that only render the login/auth flow. Empty = full shop everywhere. */
 const DEFAULT_LOGIN_ONLY_HOSTS = '';
-
-/** Full origin (protocol + host) of the open storefront. */
-const DEFAULT_MAIN_APP_ORIGIN = 'https://peplab.ai';
 
 /** Marker in the URL hash that identifies a cross-domain login handoff. */
 export const CROSS_DOMAIN_LOGIN_HASH_TYPE = 'cross-domain-login';
@@ -63,9 +61,8 @@ function resolveLoginOnlyHosts(): string[] {
 
 const LOGIN_ONLY_HOSTS = resolveLoginOnlyHosts();
 
-export const MAIN_APP_ORIGIN: string = (
-  import.meta.env.VITE_MAIN_APP_ORIGIN ?? DEFAULT_MAIN_APP_ORIGIN
-).replace(/\/+$/, '');
+/** Shop now / post-login handoff. Same switch as the header and footer. */
+export const MAIN_APP_ORIGIN: string = STOREFRONT_ORIGIN.replace(/\/+$/, '');
 
 /** Canonical site origin for this deployment (no trailing slash). */
 export function siteOrigin(): string {

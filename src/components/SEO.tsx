@@ -53,7 +53,6 @@ export function SEO({
     // Update meta tags
     const metaTags = [
       { name: 'description', content: description },
-      { name: 'keywords', content: keywords },
       { property: 'og:title', content: title },
       { property: 'og:description', content: description },
       { property: 'og:image', content: resolvedOgImage },
@@ -69,11 +68,8 @@ export function SEO({
       { name: 'twitter:image', content: resolvedOgImage },
     ];
 
-    if (noIndex) {
-      metaTags.push({ name: 'robots', content: 'noindex, nofollow' });
-    } else {
-      metaTags.push({ name: 'robots', content: 'index, follow' });
-    }
+    metaTags.push({ name: 'robots', content: 'noindex, nofollow' });
+    metaTags.push({ name: 'googlebot', content: 'noindex, nofollow' });
 
     metaTags.forEach(({ name, property, content }) => {
       let tag: HTMLMetaElement | null = null;
@@ -97,17 +93,8 @@ export function SEO({
       }
     });
 
-    // Canonical URL
-    let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement;
-    if (!canonical) {
-      canonical = document.createElement('link');
-      canonical.setAttribute('rel', 'canonical');
-      document.head.appendChild(canonical);
-    }
-    canonical.setAttribute(
-      'href',
-      `${origin}${location.pathname}${location.search}`,
-    );
+    document.querySelector('link[rel="canonical"]')?.remove();
+    document.querySelector('meta[name="keywords"]')?.remove();
   }, [title, description, keywords, resolvedOgImage, noIndex, location.pathname, location.search, origin]);
 
   return null;

@@ -1,5 +1,5 @@
 import { Suspense, lazy, useEffect, useLayoutEffect } from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Navigate, Routes, Route, useLocation } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -10,7 +10,8 @@ import { getSiteSetting, DEFAULT_AFFILIATE_PROGRAM_SETTINGS } from '@/lib/settin
 
 const PeplabLandingRoute = lazy(() => import('@/pages/PeplabLandingRoute'));
 
-// Ads host (peplabads.com): only /landing is live. Shop + other pages stay on peplab.com.au.
+// Ads host (peplabads.com): only / and /landing are live.
+// Shop, nav, and footer links use STOREFRONT_ORIGIN in src/lib/storefront-origin.ts.
 // Restore any of these lazy pages + matching <Route> entries below if this host should
 // serve the full storefront again.
 //
@@ -196,6 +197,8 @@ function App() {
                 {/* Same landing at / so Google Ads can verify the tag on www.peplabads.com */}
                 <Route path="/" element={<PeplabLandingRoute />} />
                 <Route path="/landing" element={<PeplabLandingRoute />} />
+                {/* Any other direct URL (/coa, /shop, /product/…) opens the landing only. */}
+                <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </Suspense>
           </BrowserRouter>

@@ -1,2 +1,5 @@
 User-agent: *
-Disallow: /
+Allow: /
+
+# This host is not for search. Every response sends noindex, nofollow
+# (HTML meta tag and X-Robots-Tag). No sitemap is published.
